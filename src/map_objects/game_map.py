@@ -6,7 +6,7 @@ from entity import Entity
 from random import randint
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
-
+from render_functions import RenderOrder
 
 class GameMap:
     def __init__(self, width, height):
@@ -25,7 +25,7 @@ class GameMap:
         rooms = []
         num_rooms = 0
 
-        for r in range(max_rooms):
+        for _ in range(max_rooms):
             # random width and height
             w = randint(room_min_size, room_max_size)
             h = randint(room_min_size, room_max_size)
@@ -103,7 +103,7 @@ class GameMap:
         # Get a random number of monsters
         number_of_monsters = randint(0, max_monsters_per_room)
 
-        for i in range(number_of_monsters):
+        for _ in range(number_of_monsters):
             # Choose a random location in the room
             x = randint(room.x1 + 1, room.x2 - 1)
             y = randint(room.y1 + 1, room.y2 - 1)
@@ -114,12 +114,12 @@ class GameMap:
                     ai_component = BasicMonster()
 
                     monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
-                                     fighter=fighter_component, ai=ai_component)
+                        render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
                 else:
                     fighter_component = Fighter(hp=16, defense=1, power=4)
                     ai_component = BasicMonster()
 
                     monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', blocks=True, fighter=fighter_component,
-                                     ai=ai_component)
+                        render_order=RenderOrder.ACTOR, ai=ai_component)
 
                 entities.append(monster)
