@@ -1,6 +1,7 @@
-import tcod as libtcod
+import libtcodpy as libtcod
 
 from game_states import GameStates
+
 
 def handle_keys(key, game_state):
     if game_state == GameStates.PLAYERS_TURN:
@@ -14,11 +15,6 @@ def handle_keys(key, game_state):
 
     return {}
 
-def handle_targeting_keys(key):
-    if key.vk == libtcod.KEY_ESCAPE:
-        return {'exit': True}
-
-    return {}
 
 def handle_player_turn_keys(key):
     key_char = chr(key.c)
@@ -42,23 +38,31 @@ def handle_player_turn_keys(key):
         return {'move': (1, 1)}
 
     if key_char == 'g':
-            return {'pickup': True}
+        return {'pickup': True}
+
     elif key_char == 'i':
         return {'show_inventory': True}
+
     elif key_char == 'd':
         return {'drop_inventory': True}
-
 
     if key.vk == libtcod.KEY_ENTER and key.lalt:
         # Alt+Enter: toggle full screen
         return {'fullscreen': True}
-
     elif key.vk == libtcod.KEY_ESCAPE:
         # Exit the game
         return {'exit': True}
 
     # No key was pressed
     return {}
+
+
+def handle_targeting_keys(key):
+    if key.vk == libtcod.KEY_ESCAPE:
+        return {'exit': True}
+
+    return {}
+
 
 def handle_player_dead_keys(key):
     key_char = chr(key.c)
@@ -75,6 +79,7 @@ def handle_player_dead_keys(key):
 
     return {}
 
+
 def handle_inventory_keys(key):
     index = key.c - ord('a')
 
@@ -89,6 +94,20 @@ def handle_inventory_keys(key):
         return {'exit': True}
 
     return {}
+
+
+def handle_main_menu(key):
+    key_char = chr(key.c)
+
+    if key_char == 'a':
+        return {'new_game': True}
+    elif key_char == 'b':
+        return {'load_game': True}
+    elif key_char == 'c' or  key.vk == libtcod.KEY_ESCAPE:
+        return {'exit': True}
+
+    return {}
+
 
 def handle_mouse(mouse):
     (x, y) = (mouse.cx, mouse.cy)
