@@ -10,6 +10,7 @@ It can be extended to contain multiple types of monsters,
 such as basic or confused ones.
 """
 
+
 class BasicMonster:
     def take_turn(self, target, fov_map, game_map, entities):
         results = []
@@ -25,6 +26,7 @@ class BasicMonster:
                 results.extend(attack_results)
 
         return results
+
 
 class ConfusedMonster:
     def __init__(self, previous_ai, number_of_turns=10):

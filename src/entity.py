@@ -61,7 +61,7 @@ class Entity:
         dy = int(round(dy / distance))
 
         if not (game_map.is_blocked(self.x + dx, self.y + dy) or
-                    get_blocking_entities_at_location(entities, self.x + dx, self.y + dy)):
+                get_blocking_entities_at_location(entities, self.x + dx, self.y + dy)):
             self.move(dx, dy)
 
     def move_astar(self, target, entities, game_map):
@@ -72,7 +72,7 @@ class Entity:
         for y1 in range(game_map.height):
             for x1 in range(game_map.width):
                 libtcod.map_set_properties(fov, x1, y1, not game_map.tiles[x1][y1].block_sight,
-                    not game_map.tiles[x1][y1].blocked)
+                                           not game_map.tiles[x1][y1].blocked)
 
         # Scan all the objects to see if there are objects that must be navigated around
         # Check also that the object isn't self or the target (so that the start and the end points are free)
