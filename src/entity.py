@@ -1,12 +1,18 @@
+import libtcodpy as libtcod
+
 import math
-import tcod as libtcod
+
+from components.item import Item
 
 from render_functions import RenderOrder
 
 
 class Entity:
+    """
+    A generic object to represent players, enemies, items, etc.
+    """
     def __init__(self, x, y, char, color, name, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None,
-                 item=None, inventory=None, stairs=None, level=None):
+                 item=None, inventory=None, stairs=None, level=None, equipment=None, equippable=None):
         self.x = x
         self.y = y
         self.char = char
@@ -20,6 +26,8 @@ class Entity:
         self.inventory = inventory
         self.stairs = stairs
         self.level = level
+        self.equipment = equipment
+        self.equippable = equippable
 
         if self.fighter:
             self.fighter.owner = self
@@ -39,18 +47,21 @@ class Entity:
         if self.level:
             self.level.owner = self
 
+        if self.equipment:
+            self.equipment.owner = self
+
+        if self.equippable:
+            self.equippable.owner = self
+
+            if not self.item:
+                item = Item()
+                self.item = item
+                self.item.owner = self
+
     def move(self, dx, dy):
         # Move the entity by a given amount
         self.x += dx
         self.y += dy
-
-    def distance(self, x, y):
-        return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
-
-    def distance_to(self, other):
-        dx = other.x - self.x
-        dy = other.y - self.y
-        return math.sqrt(dx ** 2 + dy ** 2)
 
     def move_towards(self, target_x, target_y, game_map, entities):
         dx = target_x - self.x
@@ -63,6 +74,14 @@ class Entity:
         if not (game_map.is_blocked(self.x + dx, self.y + dy) or
                 get_blocking_entities_at_location(entities, self.x + dx, self.y + dy)):
             self.move(dx, dy)
+
+    def distance(self, x, y):
+        return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
+
+    def distance_to(self, other):
+        dx = other.x - self.x
+        dy = other.y - self.y
+        return math.sqrt(dx ** 2 + dy ** 2)
 
     def move_astar(self, target, entities, game_map):
         # Create a FOV map that has the dimensions of the map

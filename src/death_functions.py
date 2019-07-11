@@ -20,7 +20,6 @@ def kill_monster(monster):
     monster.blocks = False
     monster.fighter = None
     monster.ai = None
-    monster.name = 'remains of ' + monster.name
     monster.render_order = RenderOrder.CORPSE
     death_message = Message('{0} is dead!'.format(monster.name.capitalize()), libtcod.orange)
 

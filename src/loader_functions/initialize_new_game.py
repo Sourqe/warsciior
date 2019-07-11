@@ -1,40 +1,39 @@
 import libtcodpy as libtcod
 
+from components.equipment import Equipment
+from components.equippable import Equippable
 from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
 
 from entity import Entity
-
+from equipment_slots import EquipmentSlots
 from game_messages import MessageLog
-
 from game_states import GameStates
-
 from map_objects.game_map import GameMap
-
 from render_functions import RenderOrder
 
 
 def get_constants():
-    window_title = 'Roguelike Tutorial Revised'
+    window_title = 'WARSCIIOR'
 
-    screen_width = 80
-    screen_height = 50
+    screen_width = 100
+    screen_height = 60
 
     bar_width = 20
-    panel_height = 7
+    panel_height = 17
     panel_y = screen_height - panel_height
 
     message_x = bar_width + 2
     message_width = screen_width - bar_width - 2
     message_height = panel_height - 1
 
-    map_width = 80
+    map_width = 100
     map_height = 43
 
-    room_max_size = 10
+    room_max_size = 15
     room_min_size = 6
-    max_rooms = 30
+    max_rooms = 45
 
     fov_algorithm = 0
     fov_light_walls = True
@@ -44,8 +43,8 @@ def get_constants():
     max_items_per_room = 2
 
     colors = {
-        'dark_wall': libtcod.Color(0, 0, 100),
-        'dark_ground': libtcod.Color(50, 50, 150),
+        'dark_wall': libtcod.Color(105, 105, 105),
+        'dark_ground': libtcod.Color(128, 128, 128),
         'light_wall': libtcod.Color(130, 110, 50),
         'light_ground': libtcod.Color(200, 180, 50)
     }
@@ -77,12 +76,19 @@ def get_constants():
 
 
 def get_game_variables(constants):
-    fighter_component = Fighter(hp=100, defense=1, power=4)
+    fighter_component = Fighter(hp=100, defense=1, power=2)
     inventory_component = Inventory(26)
     level_component = Level()
+    equipment_component = Equipment()
     player = Entity(0, 0, '@', libtcod.white, 'Player', blocks=True, render_order=RenderOrder.ACTOR,
-                    fighter=fighter_component, inventory=inventory_component, level=level_component)
+                    fighter=fighter_component, inventory=inventory_component, level=level_component,
+                    equipment=equipment_component)
     entities = [player]
+
+    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
+    dagger = Entity(0, 0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
+    player.inventory.add_item(dagger)
+    player.equipment.toggle_equip(dagger)
 
     game_map = GameMap(constants['map_width'], constants['map_height'])
     game_map.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'],

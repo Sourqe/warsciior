@@ -2,6 +2,8 @@ import libtcodpy as libtcod
 from random import randint
 
 from components.ai import BasicMonster
+from components.equipment import EquipmentSlots
+from components.equippable import Equippable
 from components.fighter import Fighter
 from components.item import Item
 from components.stairs import Stairs
@@ -127,12 +129,15 @@ class GameMap:
         number_of_items = randint(0, max_items_per_room)
 
         monster_chances = {
-            'orc': 80,
-            'troll': from_dungeon_level([[15, 3], [30, 5], [60, 7]], self.dungeon_level)
+            'orc': 40,
+            'troll': from_dungeon_level([[15, 3], [30, 5], [60, 7]], self.dungeon_level),
+            'skeleton': from_dungeon_level([[40, 3], [20, 5], [5, 7]], self.dungeon_level)
         }
 
         item_chances = {
             'healing_potion': 35,
+            'sword': from_dungeon_level([[5, 4]], self.dungeon_level),
+            'shield': from_dungeon_level([[15, 8]], self.dungeon_level),
             'lightning_scroll': from_dungeon_level([[25, 4]], self.dungeon_level),
             'fireball_scroll': from_dungeon_level([[25, 6]], self.dungeon_level),
             'confusion_scroll': from_dungeon_level([[10, 2]], self.dungeon_level)
@@ -148,16 +153,22 @@ class GameMap:
                 monster_choice = random_choice_from_dict(monster_chances)
 
                 if monster_choice == 'orc':
-                    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35)
+                    fighter_component = Fighter(hp=20, defense=1, power=4, xp=25)
                     ai_component = BasicMonster()
 
                     monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
                                      render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
-                else:
-                    fighter_component = Fighter(hp=30, defense=2, power=8, xp=100)
+                elif monster_choice == 'troll':
+                    fighter_component = Fighter(hp=25, defense=2, power=6, xp=95)
                     ai_component = BasicMonster()
 
                     monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', blocks=True, fighter=fighter_component,
+                                     render_order=RenderOrder.ACTOR, ai=ai_component)
+                else:
+                    fighter_component = Fighter(hp=10, defense=0, power=2, xp=15)
+                    ai_component = BasicMonster()
+
+                    monster = Entity(x, y, 's', libtcod.white, 'Skeleton', blocks=True, fighter=fighter_component,
                                      render_order=RenderOrder.ACTOR, ai=ai_component)
 
                 entities.append(monster)
@@ -173,6 +184,12 @@ class GameMap:
                     item_component = Item(use_function=heal, amount=40)
                     item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM,
                                   item=item_component)
+                elif item_choice == 'sword':
+                    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
+                    item = Entity(x, y, '/', libtcod.sky, 'Sword', equippable=equippable_component)
+                elif item_choice == 'shield':
+                    equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
+                    item = Entity(x, y, '[', libtcod.darker_orange, 'Shield', equippable=equippable_component)
                 elif item_choice == 'fireball_scroll':
                     item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message(
                         'Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan),
