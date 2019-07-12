@@ -6,12 +6,12 @@ from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
 
-from entity import Entity
-from equipment_slots import EquipmentSlots
-from game_messages import MessageLog
-from game_states import GameStates
+from components.entity import Entity
+from items.equipment_slots import EquipmentSlots
+from game.game_messages import MessageLog
+from game.game_states import GameStates
 from map_objects.game_map import GameMap
-from render_functions import RenderOrder
+from game.render_functions import RenderOrder
 
 
 def get_constants():
@@ -39,7 +39,7 @@ def get_constants():
     fov_light_walls = True
     fov_radius = 10
 
-    max_monsters_per_room = 3
+    max_monsters_per_room = 2
     max_items_per_room = 2
 
     colors = {

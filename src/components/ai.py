@@ -1,7 +1,7 @@
 import tcod as libtcod
 
 from random import randint
-from game_messages import Message
+from game.game_messages import Message
 
 """
 This file contains all monster classes.

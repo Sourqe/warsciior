@@ -25,3 +25,5 @@ def random_choice_index(chances):
 def random_choice_from_dict(choice_dict):
     choices = list(choice_dict.keys())
     chances = list(choice_dict.values())
+
+    return choices[random_choice_index(chances)]

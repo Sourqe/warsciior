@@ -8,18 +8,18 @@ from components.fighter import Fighter
 from components.item import Item
 from components.stairs import Stairs
 
-from entity import Entity
+from components.entity import Entity
 
-from game_messages import Message
+from game.game_messages import Message
 
-from item_functions import cast_confuse, cast_fireball, cast_lightning, heal
+from items.item_functions import cast_confuse, cast_fireball, cast_lightning, heal
 
 from map_objects.rectangle import Rect
 from map_objects.tile import Tile
 
-from random_utils import from_dungeon_level, random_choice_from_dict
+from game.random_utils import from_dungeon_level, random_choice_from_dict
 
-from render_functions import RenderOrder
+from game.render_functions import RenderOrder
 
 
 class GameMap:
@@ -130,8 +130,8 @@ class GameMap:
 
         monster_chances = {
             'orc': 40,
-            'troll': from_dungeon_level([[15, 3], [30, 5], [60, 7]], self.dungeon_level),
-            'skeleton': from_dungeon_level([[40, 3], [20, 5], [5, 7]], self.dungeon_level)
+            'troll': from_dungeon_level([[5, 0], [40, 1], [70, 2]], self.dungeon_level),
+            'skeleton': from_dungeon_level([[55, 0], [40, 1], [20, 2]], self.dungeon_level)
         }
 
         item_chances = {
